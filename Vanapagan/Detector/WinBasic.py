@@ -27,25 +27,17 @@ class WinBasic:
 		for ( process, name ) in self.debugger.system.find_processes_by_filename( img ):
 			self.attachPid(process.get_pid())		
 				
-	def close(self, kill = True, taskkill = True, forced = True):
-		#Loop through all processes
-		for pid in self.debugger.get_debugee_pids():
-		    #detaching from process
-			try:
-				self.debugger.detach( pid, True )
-			except:
-				pass					
-			
-			#Give process kill commands
+	def close(self, kill = True, taskkill = True, forced = True):	
+		pids = self.debugger.get_debugee_pids()
+		
+		self.debugger.detach_from_all( True )	
+		for pid in pids:				
 			if kill:
 				try:
 					proc = self.debugger.system.get_process(pid)
 					proc.kill()
 				except:
 					pass
-					
-			#Just in case detach from all also (should not be needed but...)
-			self.debugger.detach_from_all( True )
 			
 			#Taskkill
 			if taskkill and not forced:
