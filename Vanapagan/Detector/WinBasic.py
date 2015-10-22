@@ -109,7 +109,7 @@ class WinBasic:
 			if lib != None:
 				report.location = lib.get_label_at_address(crash.pc)
 			else:
-				report.location = HexDump.address(crash.pc, 32)
+				report.location = HexDump.address(crash.pc, 32)[4:]
 				
 			report.faultAddr = HexDump.address(crash.faultAddress, 32)
 			
