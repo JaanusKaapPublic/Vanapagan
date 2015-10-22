@@ -41,6 +41,19 @@ class FileBitFlipping:
 			return None
 		return "|".join(ret_signature) + "\n" + ret_text
 		
+	def restore(self, src, dest, signature):
+		signatures = signature.split('|')
+		shutil.copy2(src, dest)
+		
+		f=open(dest, "r+b")
+		for sign in signatures:
+			pos = int(sign[0:8], 16)
+			val = int(sign[8:10], 16)
+			f.seek(pos)
+			f.write(chr(val))
+		f.close()
+		
+		
 		
 	def modify(self, byte):
 		return byte  ^ [1,2,4,8,16,32,64,128][self.myRand(0, 7)] 

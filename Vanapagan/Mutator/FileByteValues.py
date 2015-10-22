@@ -46,3 +46,16 @@ class FileByteValues:
 			return min + (val % (max-min))
 		except:
 			return random.randint(min, max)
+	
+	
+	def restore(self, src, dest, signature):
+		signatures = signature.split('|')
+		shutil.copy2(src, dest)
+		
+		f=open(dest, "r+b")
+		for sign in signatures:
+			pos = int(sign[0:8], 16)
+			val = int(sign[8:10], 16)
+			f.seek(pos)
+			f.write(chr(val))
+		f.close()

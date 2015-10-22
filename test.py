@@ -8,4 +8,6 @@ from Vanapagan.Mutator.FileByteValues import FileByteValues
 #	print rep.getInfo()
 #test.close()
 test = FileByteValues()
-print test.mutate("test.txt", "output.txt")
+xxx = test.mutate("test.txt", "output.txt")
+print xxx
+test.restore("output.txt", "output2.txt", xxx.split("\n")[0].split("|")[0])
