@@ -1,6 +1,8 @@
 from winappdbg import System
 import subprocess
 import ctypes
+import win32evtlog
+
 
 
 def killByPid(pid, forced = True):
@@ -38,3 +40,14 @@ def getPidsByImg(img):
 	for ( process, name ) in system.find_processes_by_filename( img ):
 		result.append(process.get_pid())
 	return result
+	
+def clearEvents():
+	elog = win32evtlog.OpenEventLog(None, "Application")
+	win32evtlog.ClearEventLog(elog, None)
+	win32evtlog.CloseEventLog(elog)
+	
+def isEvent():
+	elog = win32evtlog.OpenEventLog(None, "Application")
+	nr = win32evtlog.GetNumberOfEventLogRecords(elog)
+	win32evtlog.CloseEventLog(elog)
+	return (nr>0)

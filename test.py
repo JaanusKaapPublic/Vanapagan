@@ -1,4 +1,6 @@
 import os 
+import time
+import subprocess
 from Vanapagan.Detector.WinBasic import WinBasic
 from Vanapagan.Mutator.FileBitFlipping import FileBitFlipping
 from Vanapagan.Loging.FilesystemLoging import FilesystemLoging
@@ -12,19 +14,56 @@ run = WinBasic()
 mut = FileBitFlipping()
 mut.rate=8000
 
+
+
 while True:
-	for f in os.listdir("c:/Fuzz/input"):
-		desc = mut.mutate("c:/Fuzz/input/" + f, "c:/Fuzz/test.pdf")
-		run.run(["C:\Program Files\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe", "c:/Fuzz/test.pdf"])
-		crash = run.waitForCrash(6)
-		run.close()
-		if crash != None:
-			log.log("c:/Fuzz/test.pdf", crash, desc)
-			print "Issue detected at %s" % crash.location
-		
-		count += 1
-		if count % 5 == 0:
-			print "Done %d reps" % count
+	try:
+		for f in os.listdir("c:/Fuzz/input"):
+			while True:
+				try:
+					desc = mut.mutate("c:/Fuzz/input/" + f, "c:/Fuzz/test.pdf")
+					break
+				except:
+					time.sleep(1)
+				
+			clearEvents()
+			subprocess.Popen(["C:\\Program Files\\Adobe\\Acrobat Reader DC\\Reader\\AcroRd32.exe", "c:\\Fuzz\\test.pdf"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			time.sleep(4)
+			killByImg("AcroRd32.exe")
+			if isEvent():
+				log.log("c:/Fuzz/test.pdf", "CRASHED :(", desc)
+				print "Issue detected!"
+			
+			count += 1
+			if count % 5 == 0:
+				print "Done %d reps" % count
+	except:
+		#raise
+		killByImg("AcroRd32.exe")
+		time.sleep(1)
+
+
+#while True:
+#	for f in os.listdir("c:/Fuzz/input"):
+#		clearEvents()
+#		os.system("c:\\Work\\Fuzzers\\Vanapagan\\Crash.exe")
+#		if isEvent():
+#			print "CRASH"
+			
+
+#while True:
+#	for f in os.listdir("c:/Fuzz/input"):
+#		desc = mut.mutate("c:/Fuzz/input/" + f, "c:/Fuzz/test.pdf")
+#		run.run(["C:\Program Files\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe", "c:/Fuzz/test.pdf"])
+#		crash = run.waitForCrash(6)
+#		run.close()
+#		if crash != None:
+#			log.log("c:/Fuzz/test.pdf", crash, desc)
+#			print "Issue detected at %s" % crash.location
+#		
+#		count += 1
+#		if count % 5 == 0:
+#			print "Done %d reps" % count
 
 
 #test.run(['crash'])
