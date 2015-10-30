@@ -3,6 +3,7 @@ import time
 import subprocess
 from Vanapagan.Detector.WinBasic import WinBasic
 from Vanapagan.Mutator.FileBitFlipping import FileBitFlipping
+from Vanapagan.Mutator.XmlBitFlipping import XmlBitFlipping
 from Vanapagan.Loging.FilesystemLoging import FilesystemLoging
 from Vanapagan.Utils.WinUtils import *
 from Vanapagan.Utils.ZipFiles import *
@@ -12,15 +13,17 @@ count = 0
 log = FilesystemLoging()
 log.dir = "c:/Fuzz/crashAdobe"
 run = WinBasic()
-mut = FileBitFlipping()
-mut.rate=8000
+mut = XmlBitFlipping()
+mut.rate=80000
 
 
-up = zip_unpack("Test.zip", "./Test")
-print up
-for x in xrange(50):
-	print "%02d: %s" % (x, zip_randFile(up))
 
+mut.mutate("in.txt", "out.txt")
+
+#up = zip_unpack("Test.zip", "./Test")
+#print up
+#for x in xrange(50):
+#	print "%02d: %s" % (x, zip_randFile(up))
 
 #while True:
 #	try:
