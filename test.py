@@ -16,8 +16,10 @@ mut = FileBitFlipping()
 mut.rate=8000
 
 
-print unpack("Test.zip", "./Test")
-pack("./Test", "out.zip")
+up = zip_unpack("Test.zip", "./Test")
+print up
+for x in xrange(50):
+	print "%02d: %s" % (x, zip_randFile(up))
 
 
 #while True:

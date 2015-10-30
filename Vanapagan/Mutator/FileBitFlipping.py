@@ -62,6 +62,6 @@ class FileBitFlipping:
 	def myRand(self, min, max):
 		try: 
 			val = ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1)) + ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1)) + ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1))
-			return min + (val % (max-min))
+			return min + (val % (max-min+1))
 		except:
 			return random.randint(min, max)
