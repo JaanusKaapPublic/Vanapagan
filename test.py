@@ -5,6 +5,7 @@ from Vanapagan.Detector.WinBasic import WinBasic
 from Vanapagan.Mutator.FileBitFlipping import FileBitFlipping
 from Vanapagan.Loging.FilesystemLoging import FilesystemLoging
 from Vanapagan.Utils.WinUtils import *
+from Vanapagan.Utils.ZipFiles import *
 
 
 count = 0
@@ -15,32 +16,36 @@ mut = FileBitFlipping()
 mut.rate=8000
 
 
+print unpack("Test.zip", "./Test")
+pack("./Test", "out.zip")
 
-while True:
-	try:
-		for f in os.listdir("c:/Fuzz/input"):
-			while True:
-				try:
-					desc = mut.mutate("c:/Fuzz/input/" + f, "c:/Fuzz/test.pdf")
-					break
-				except:
-					time.sleep(1)
-				
-			clearEvents()
-			subprocess.Popen(["C:\\Program Files\\Adobe\\Acrobat Reader DC\\Reader\\AcroRd32.exe", "c:\\Fuzz\\test.pdf"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-			time.sleep(4)
-			killByImg("AcroRd32.exe")
-			if isEvent():
-				log.log("c:/Fuzz/test.pdf", "CRASHED :(", desc)
-				print "Issue detected!"
-			
-			count += 1
-			if count % 5 == 0:
-				print "Done %d reps" % count
-	except:
+
+#while True:
+#	try:
+#		for f in os.listdir("c:/Fuzz/input"):
+#			while True:
+#				try:
+#					desc = mut.mutate("c:/Fuzz/input/" + f, "c:/Fuzz/test.pdf")
+#					break
+#				except:
+#					time.sleep(1)
+#				
+#			#clearEvents()
+#			#subprocess.Popen(["C:\\Program Files\\Adobe\\Acrobat Reader DC\\Reader\\AcroRd32.exe", "c:\\Fuzz\\test.pdf"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#			subprocess.Popen(["C:\\Program Files\\Foxit Software\\Foxit Reader\\FoxitReader.exe", "c:\\Fuzz\\test.pdf"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#			time.sleep(8)
+#			killByImg("FoxitReader.exe")
+#			if isEvent():
+#				log.log("c:/Fuzz/test.pdf", "CRASHED :(", desc)
+#				print "Issue detected!"
+#			
+#			count += 1
+#			if count % 5 == 0:
+#				print "Done %d reps" % count
+#	except:
 		#raise
-		killByImg("AcroRd32.exe")
-		time.sleep(1)
+#		killByImg("FoxitReader.exe")
+#		time.sleep(1)
 
 
 #while True:
