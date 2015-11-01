@@ -11,14 +11,22 @@ from Vanapagan.Utils.ZipFiles import *
 
 count = 0
 log = FilesystemLoging()
-log.dir = "c:/Fuzz/crashAdobe"
+log.dir = "c:/Fuzz/crashTest"
 run = WinBasic()
 mut = XmlBitFlipping()
 mut.rate=80000
 
 
+clearEvents()
+os.system("c:\\Work\\Fuzzers\\Vanapagan\\Crash.exe")
+time.sleep(5)
+print "Is crashing?"
+crash = isEvent()
+if crash != None:
+	log.log("c:/Fuzz/test.pdf", crash, "CRASHED :(")
+	print "CRASH"
 
-mut.mutate("in.txt", "out.txt")
+#mut.mutate("in.txt", "out.txt")
 
 #up = zip_unpack("Test.zip", "./Test")
 #print up

@@ -2,6 +2,7 @@ from winappdbg import System
 import subprocess
 import ctypes
 import win32evtlog
+from ..CrashReport import CrashReport
 
 
 
@@ -49,5 +50,20 @@ def clearEvents():
 def isEvent():
 	elog = win32evtlog.OpenEventLog(None, "Application")
 	nr = win32evtlog.GetNumberOfEventLogRecords(elog)
-	win32evtlog.CloseEventLog(elog)
-	return (nr>0)
+	if nr>0:
+		events = win32evtlog.ReadEventLog(elog, win32evtlog.EVENTLOG_BACKWARDS_READ|win32evtlog.EVENTLOG_SEQUENTIAL_READ,0)
+		if events:
+			for event in events:
+				if int(event.EventID) == 1000:
+					#Of course it's not enough but at least something
+					data = event.StringInserts
+					crash = CrashReport()
+					crash.location = data[0] + "!" +data[3]
+					crash.faultAddr = "UNKNOWN"
+					crash.code = "UNKNOWN"
+					crash.nearNull = True
+					crash.type = data[6]
+					crash.stack = "UNKNOWN"
+					crash.info = "UNKNOWN"
+					return crash
+	return None
