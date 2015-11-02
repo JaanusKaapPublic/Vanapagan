@@ -54,7 +54,7 @@ def isEvent():
 		events = win32evtlog.ReadEventLog(elog, win32evtlog.EVENTLOG_BACKWARDS_READ|win32evtlog.EVENTLOG_SEQUENTIAL_READ,0)
 		if events:
 			for event in events:
-				if int(event.EventID) == 1000:
+				if int(event.EventID) == 1000 and int(event.EventCategory) == 100:
 					#Of course it's not enough but at least something
 					data = event.StringInserts
 					crash = CrashReport()
