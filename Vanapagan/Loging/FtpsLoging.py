@@ -28,7 +28,7 @@ class FtpsLoging:
 		self.workDone += 1
 		
 	
-	def log(self, file, crashReport = None, fileDesc = None):
+	def log(self, file, crashReport = None, fileDesc = None, maxPerIssue=25):
 		self.workDone = 0
 		ftp = ftplib.FTP_TLS(self.host)
 		ftp.FtpsLoging = self
@@ -51,6 +51,10 @@ class FtpsLoging:
 			self.newDir(ftp, tmpDir)
 				
 		count = (len(ftp.nlst(""))-2)/2
+		if count >= maxPerIssue:
+			ftp.close()
+			return
+			
 		ftp.storbinary('STOR ' + ("%04d_crash" % count) + os.path.splitext(file)[1], open(file, 'rb'), callback = self.workDoneFunc)
 		fout = open("./TmpDescription.txt", "wb")
 		if fileDesc != None:

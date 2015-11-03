@@ -5,7 +5,7 @@ import shutil
 class FilesystemLoging:
 	dir = "./crashes"
 	
-	def log(self, file, crashReport = None, fileDesc = None):
+	def log(self, file, crashReport = None, fileDesc = None, maxPerIssue=25):
 		tmpDir = "" + self.dir		
 		if not os.path.isdir(tmpDir):
 			os.makedirs(tmpDir)	
@@ -27,6 +27,8 @@ class FilesystemLoging:
 				os.makedirs(tmpDir)
 				
 		count = len(os.listdir(tmpDir))/2
+		if count >= maxPerIssue:
+			return
 		shutil.copy2(file, tmpDir  + ("/%04d_crash" % count) + os.path.splitext(file)[1])
 		fout = open(tmpDir + ("/%04d_description.txt" % count), "wb")
 		if fileDesc != None:

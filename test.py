@@ -10,7 +10,7 @@ from Vanapagan.Utils.ZipFiles import *
 
 
 count = 0
-log = FtpsLoging("Host.host", "Username", "Password")
+log = FtpsLoging("HOST", "USERNAME", "PASSWORD")
 run = WinBasic()
 mut = XmlBitFlipping()
 mut.rate=80000
