@@ -14,7 +14,8 @@ class FileBitFlipping:
 		ret_text = ""
 		try:
 			ret_text += "Mutating file %s into file %s using FileBitFlipping mutator\n\n" % (src, dest)
-			shutil.copy2(src, dest)
+			if src!=dest:
+				shutil.copy2(src, dest)
 			size = os.path.getsize( dest )		
 			count = int(round(size / self.rate))
 			if int(count) < self.min:
@@ -43,7 +44,8 @@ class FileBitFlipping:
 		
 	def restore(self, src, dest, signature):
 		signatures = signature.split('|')
-		shutil.copy2(src, dest)
+		if src!=dest:
+			shutil.copy2(src, dest)
 		
 		f=open(dest, "r+b")
 		for sign in signatures:

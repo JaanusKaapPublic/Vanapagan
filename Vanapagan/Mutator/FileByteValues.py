@@ -14,7 +14,8 @@ class FileByteValues:
 		ret_signature = []
 		ret_text = ""
 		try:
-			shutil.copy2(src, dest)
+			if src!=dest:
+				shutil.copy2(src, dest)
 			size = os.path.getsize( dest )		
 			count = int(round(size / self.rate))
 			if int(count) < self.min:
@@ -50,7 +51,8 @@ class FileByteValues:
 	
 	def restore(self, src, dest, signature):
 		signatures = signature.split('|')
-		shutil.copy2(src, dest)
+		if src!=dest:
+			shutil.copy2(src, dest)
 		
 		f=open(dest, "r+b")
 		for sign in signatures:
