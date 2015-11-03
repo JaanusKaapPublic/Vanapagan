@@ -1,7 +1,7 @@
 import os
 import time
 import ftplib
-
+import tempfile
 
 class FtpsLoging:
 	dir = "crashes/crashesTest"
@@ -56,25 +56,16 @@ class FtpsLoging:
 			return
 			
 		ftp.storbinary('STOR ' + ("%04d_crash" % count) + os.path.splitext(file)[1], open(file, 'rb'), callback = self.workDoneFunc)
-		fout = open("./TmpDescription.txt", "wb")
+		fout = TemporaryFile()
 		if fileDesc != None:
 			fout.write(fileDesc + "\n\n")
 		if crashReport != None:
 			fout.write(crashReport.getInfo())
-		fout.close()
-		ftp.storbinary('STOR ' + ("%04d_description.txt" % count), open("./TmpDescription.txt", 'rb'), callback = self.workDoneFunc)
+		ftp.storbinary('STOR ' + ("%04d_description.txt" % count), fout, callback = self.workDoneFunc)
 		
 		while self.workDone < 2:
 			time.sleep(1)
+		fout.close()
 		ftp.close()
 		count = 0
-		while True:
-			try:
-				os.remove("./TmpDescription.txt")
-				break
-			except:
-				count += 1
-				if count > 3:
-					raise
-				time.sleep(1)
 		
