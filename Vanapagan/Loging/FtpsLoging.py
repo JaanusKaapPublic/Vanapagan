@@ -56,11 +56,12 @@ class FtpsLoging:
 			return
 			
 		ftp.storbinary('STOR ' + ("%04d_crash" % count) + os.path.splitext(file)[1], open(file, 'rb'), callback = self.workDoneFunc)
-		fout = TemporaryFile()
+		fout = tempfile.TemporaryFile()
 		if fileDesc != None:
 			fout.write(fileDesc + "\n\n")
 		if crashReport != None:
 			fout.write(crashReport.getInfo())
+		fout.seek(0)
 		ftp.storbinary('STOR ' + ("%04d_description.txt" % count), fout, callback = self.workDoneFunc)
 		
 		while self.workDone < 2:
