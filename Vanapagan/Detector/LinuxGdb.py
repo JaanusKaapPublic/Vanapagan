@@ -34,12 +34,12 @@ class LinuxGdb:
 		poll_obj.register(self.mainProc.stdout, select.POLLIN)   
 		result = self.readPollStr(poll_obj)
 		
-		if " SIG" in result:
+		if " SIGSEGV" in result:
 			report = CrashReport()
 			report.location = "UNKNOWN"
 			report.faultAddr = "UNKNOWN"
 			report.code = "UNKNOWN"
-			report.nearNull = "UNKNOWN"
+			report.nearNull = True
 			report.type = "UNKNOWN"
 			report.stack = "UNKNOWN"
 			report.info = ""
@@ -50,6 +50,23 @@ class LinuxGdb:
 			if pos3<pos2 and pos3!=-1:
 				pos2=pos3
 			report.type=result[pos1:pos2]
+			
+			
+
+			self.mainProc.stdin.write("p $_siginfo._sifields._sigfault.si_addr\n")
+			time.sleep(3)
+			crashLocation = self.readPollStr(poll_obj)
+			pos1 = crashLocation.find("0x")+2
+			pos2 = crashLocation.find("(gdb)")-1
+			if pos2==-1:
+				pos2=len(crashLocation[pos1:])
+			if pos2-pos1<4:
+				report.nearNull = True
+			else:
+				report.nearNull = False
+			result += "\n\n\n---CRASH ADDRESS---\n"
+			result += crashLocation
+				
 
 			self.mainProc.stdin.write("x/i $pc\n")
 			time.sleep(3)
