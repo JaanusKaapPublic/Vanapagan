@@ -21,7 +21,7 @@ while True:
 	try:
 		for f in os.listdir("./input"):
 			desc = mut.mutate("./input/" + f, "/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test.pdf")
-			run.run("com.adobe.reader/com.adobe.reader.AdobeReader", "/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test.pdf")
+			run.run("com.foxit.mobile.pdf.lite/com.fuxin.read.RD_ReadActivity", "/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test.pdf")
 			crash = run.waitForCrash(5)
 			if crash != None:
 				crashes += 1

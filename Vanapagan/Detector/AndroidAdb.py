@@ -6,25 +6,37 @@ import subprocess
 class AndroidAdb:
 	adbExecutable = "adb"
 	deviceTmpFile = "/sdcard/Tmp/test"	
+	device = None
 	package = "???"
 	mainProc = None
 	
-	def __init__(self, adbExecutable = None, deviceTmpFile = None):
+	def __init__(self, adbExecutable = None, deviceTmpFile = None, device = None):
 		if adbExecutable != None:
 			self.adbExecutable = adbExecutable
 		if deviceTmpFile != None:
 			self.deviceTmpFile = deviceTmpFile		
+		if device != None:
+			self.device = device		
 			
 		
 	def run(self, package, testFile):
 		self.package = package
-		subprocess.call([self.adbExecutable, "push", testFile, self.deviceTmpFile])
-		subprocess.call([self.adbExecutable, "shell", "logcat", "-c"])
-		subprocess.call([self.adbExecutable, "shell", "am", "start", "-d", "file://" + self.deviceTmpFile, "-n", package])
+		if self.device == None:
+			subprocess.call([self.adbExecutable, "push", testFile, self.deviceTmpFile])
+			subprocess.call([self.adbExecutable, "shell", "logcat", "-c"])
+			subprocess.call([self.adbExecutable, "shell", "am", "start", "-a" "android.intent.action.VIEW", "-n", package, "file://" + self.deviceTmpFile])
+		else:
+			subprocess.call([self.adbExecutable, "-s", self.device, "push", testFile, self.deviceTmpFile])
+			subprocess.call([self.adbExecutable, "-s", self.device, "shell", "logcat", "-c"])
+			subprocess.call([self.adbExecutable, "-s", self.device, "shell", "am", "start", "-a" "android.intent.action.VIEW", "-n", package, "file://" + self.deviceTmpFile])
 				
 	def waitForCrash(self, waitTime = 4):
 		time.sleep(waitTime)
-		result = subprocess.check_output("adb shell logcat -d *:F", shell=True)
+		result = None
+		if self.device == None:
+			result = subprocess.check_output(self.adbExecutable + " shell logcat -d *:F", shell=True)
+		else:
+			result = subprocess.check_output(self.adbExecutable + " -s " + self.device + " shell logcat -d *:F", shell=True)
 		
 		if "(SIG" in result:		
 			report = CrashReport()
@@ -54,4 +66,7 @@ class AndroidAdb:
 		return None
 				
 	def close(self):
-		subprocess.call([self.adbExecutable, "shell", "am", "force-stop", self.package[0:self.package.find('/')]])		
+		if self.device == None:
+			subprocess.call([self.adbExecutable, "shell", "am", "force-stop", self.package[0:self.package.find('/')]])		
+		else:
+			subprocess.call([self.adbExecutable, "-s", self.device, "shell", "am", "force-stop", self.package[0:self.package.find('/')]])		
