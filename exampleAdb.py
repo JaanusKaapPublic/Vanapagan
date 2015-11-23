@@ -6,29 +6,33 @@ from Vanapagan.Detector.AndroidAdb import AndroidAdb
 from Vanapagan.Loging.FilesystemLoging import FilesystemLoging
 from Vanapagan.Mutator.FileBitFlipping import FileBitFlipping
 
+myNr = 1
 count = 0
 crashes = 0
 notNull = 0 
 log = FilesystemLoging()
+log.dir = "./crashesAdobeReader"
 run = AndroidAdb(deviceTmpFile = "/sdcard/Tmp/test.pdf")
 mut = FileBitFlipping()
 mut.rate=12000
 
 if len(sys.argv)>1:
 	run.device = sys.argv[1]
+if len(sys.argv)>2:
+	myNr = sys.argv[2]
 
 while True:
 	try:
 		for f in os.listdir("./input"):
-			desc = mut.mutate("./input/" + f, "/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test.pdf")
-			run.run("com.adobe.reader/com.adobe.reader.AdobeReader", "/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test.pdf")
+			desc = mut.mutate("./input/" + f, "/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test_" + myNr + ".pdf")
+			run.run("com.adobe.reader/com.adobe.reader.AdobeReader", "/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test_" + myNr + ".pdf")
 			crash = run.waitForCrash(5)
 			if crash != None:
 				crashes += 1
 				if not crash.nearNull:
 					notNull += 1
 				print "##########Something happened in %s###########" % crash.location
-				log.log("/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test.pdf", crash, desc)	
+				log.log("/home/jaanus/MysTuff/0day/__share__/Test/Vanapagan/test_" + myNr + ".pdf", crash, desc)	
 			run.close()
 
 			count += 1
