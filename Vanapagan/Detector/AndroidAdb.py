@@ -56,12 +56,16 @@ class AndroidAdb:
 					if len(cols)>0:
 						report.location = cols[0].replace("/", ".").replace(":", ".")
 						
-					if "(SIGSIGSEGV" in lines[x]:
+					if "(SIGSEGV" in lines[x]:
 						pos1 = lines[x].find("0x")
 						pos2 = lines[x].find(" (code=")
-						addr = int(lines[x][pos1:pos2])
+						addr = int(lines[x][pos1:pos2], 16)
 						if addr > 4095:
 							report.nearNull = False
+						pos1=pos2+7
+						pos2 = pos1 + lines[x][pos1:].find(")")
+						if pos2-pos1>0:
+							report.type = lines[x][pos1:pos2]
 			return report		
 		return None
 				
