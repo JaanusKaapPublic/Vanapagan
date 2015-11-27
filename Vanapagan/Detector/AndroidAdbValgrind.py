@@ -83,13 +83,13 @@ class AndroidAdbValgrind:
 			
 			loc1 = pos0 + result[pos0:].find("at 0x")+3
 			loc2 = loc1 + result[loc1:].find(": ")
-			report.location = result[loc1:loc2]
+			report.location = result[loc1:loc2][-3:] #-3 because of the ASLR for now
 			
 			loc2 = loc1 + result[loc1:].find("\n")
 			loc1 = loc1 + result[loc1:].find(": ")+2
 			parts = result[loc1:loc2].split("/")
 			if len(parts)>2:
-				if " (in " in parts[0]:
+				if " (in " in parts[0] and "???" not in parts[0]:
 					report.location = parts[len(parts)-1][:-1] + "_" + parts[0][:-5] + "_" + report.location
 				else:
 					report.location = parts[len(parts)-1][:-1] + "_" + report.location

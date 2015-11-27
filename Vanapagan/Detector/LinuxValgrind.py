@@ -73,7 +73,7 @@ class LinuxValgrind:
 			
 			loc1 = pos0 + result[pos0:].find("at 0x")+3
 			loc2 = loc1 + result[loc1:].find(": ")
-			report.location = result[loc1:loc2]
+			report.location = result[loc1:loc2][-3:] #-3 because of the ASLR for now
 			
 			loc2 = loc1 + result[loc1:].find("\n")
 			loc1 = loc1 + result[loc1:].find(": ")+2
