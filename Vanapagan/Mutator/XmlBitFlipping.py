@@ -77,24 +77,21 @@ class XmlBitFlipping:
 	def isInXmlValue(self, f, pos, len):
 		quotes = False
 		f.seek(pos)
-		for x in xrange(len):
-			c = f.read(1)
-			if c == ">":
-				return False
-			if c == "<":
-				return False
-		for x in xrange(pos):
-			f.seek(pos-x)
-			c = f.read(1)
-			if quotes:
-				if c == "=":
-					return True
+		c = f.read(1)
+		if c == "<" or c == ">" or c == "\"":
+			return False
+		
+		c = f.read(1)
+		quotes = 0
+		while c != "" and c != None:
+			if c=="\"":
+				quotes += 1
+			if c==">":
+				if quotes % 2 == 0:
+					return False
 				else:
-					quotes = False
-			if c == ">":
+					return True				
+			if c=="<":
 				return True
-			if c == "<":
-				return False
-			if c == "\"":
-				quotes = True
+			c = f.read(1)
 		return False

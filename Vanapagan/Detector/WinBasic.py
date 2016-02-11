@@ -103,6 +103,8 @@ class WinBasic:
 			else:
 				report.location = HexDump.address(crash.pc, 32)[4:]
 				
+			if crash.faultAddress == None:
+				crash.faultAddress = 0
 			report.faultAddr = HexDump.address(crash.faultAddress, 32)
 			
 			report.stack = ""
