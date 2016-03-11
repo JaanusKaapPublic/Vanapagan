@@ -1,9 +1,9 @@
 import shutil
 import os
-import random
+import MutatorBase
 
 
-class FileByteValues:
+class FileByteValues(MutatorBase.MutatorBase):
 	byteValues = [[0x00], [0xFF], [0xFE], [0xFF,0xFF], [0xFF,0xFE], [0xFE,0xFF], [0xFF,0xFF,0xFF,0xFF], [0xFF,0xFF,0xFF,0xFE], [0xFE,0xFF,0xFF,0xFF], [0x7F], [0x7E], [0x7F,0xFF], [0x7F,0xFE], [0xFF,0x7F], [0xFE,0x7F], [0x7F,0xFF,0xFF,0xFF], [0x7F,0xFF,0xFF,0xFE], [0xFF,0xFF,0xFF,0x7F], [0xFE,0xFF,0xFF,0x7F]]
 	rate = 20000
 	min = 2
@@ -39,25 +39,3 @@ class FileByteValues:
 			raise #Just for now
 			return None
 		return "|".join(ret_signature) + "\n" + ret_text
-				
-		
-	def myRand(self, min, max):
-		try: 
-			val = ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1)) + ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1)) + ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1))
-			return min + (val % (max-min+1))
-		except:
-			return random.randint(min, max)
-	
-	
-	def restore(self, src, dest, signature):
-		signatures = signature.split('|')
-		if src!=dest:
-			shutil.copy2(src, dest)
-		
-		f=open(dest, "r+b")
-		for sign in signatures:
-			pos = int(sign[0:8], 16)
-			val = int(sign[8:10], 16)
-			f.seek(pos)
-			f.write(chr(val))
-		f.close()

@@ -1,9 +1,10 @@
 import shutil
 import os
 import random
+import MutatorBase
 
 
-class FileBitFlipping:
+class FileBitFlipping(MutatorBase.MutatorBase):
 	rate = 20000
 	min = 2
 	max = 100
@@ -42,28 +43,5 @@ class FileBitFlipping:
 			return None
 		return "|".join(ret_signature) + "\n" + ret_text
 		
-	def restore(self, src, dest, signature):
-		signatures = signature.split('|')
-		if src!=dest:
-			shutil.copy2(src, dest)
-		
-		f=open(dest, "r+b")
-		for sign in signatures:
-			pos = int(sign[0:8], 16)
-			val = int(sign[8:10], 16)
-			f.seek(pos)
-			f.write(chr(val))
-		f.close()
-		
-		
-		
 	def modify(self, byte):
 		return byte  ^ [1,2,4,8,16,32,64,128][self.myRand(0, 7)] 
-		
-		
-	def myRand(self, min, max):
-		try: 
-			val = ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1)) + ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1)) + ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1))
-			return min + (val % (max-min+1))
-		except:
-			return random.randint(min, max)

@@ -1,9 +1,9 @@
 import shutil
 import os
-import random
+import MutatorBase
 
 
-class XmlBitFlipping:
+class XmlBitFlipping(MutatorBase.MutatorBase):
 	rate = 20000
 	min = 2
 	max = 100
@@ -48,50 +48,6 @@ class XmlBitFlipping:
 			return None
 		return "|".join(ret_signature) + "\n" + ret_text
 		
-	def restore(self, src, dest, signature):
-		signatures = signature.split('|')
-		if src!=dest:
-			shutil.copy2(src, dest)
-		
-		f=open(dest, "r+b")
-		for sign in signatures:
-			pos = int(sign[0:8], 16)
-			val = int(sign[8:10], 16)
-			f.seek(pos)
-			f.write(chr(val))
-		f.close()
-		
-		
 		
 	def modify(self, byte):
-		return byte  ^ [1,2,4,8,16,32,64][self.myRand(0, 6)] 
-		
-		
-	def myRand(self, min, max):
-		try: 
-			val = ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1)) + ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1)) + ord(os.urandom(1)) * ord(os.urandom(1)) * ord(os.urandom(1))
-			return min + (val % (max-min+1))
-		except:
-			return random.randint(min, max)
-		
-	def isInXmlValue(self, f, pos, len):
-		quotes = False
-		f.seek(pos)
-		c = f.read(1)
-		if c == "<" or c == ">" or c == "\"":
-			return False
-		
-		c = f.read(1)
-		quotes = 0
-		while c != "" and c != None:
-			if c=="\"":
-				quotes += 1
-			if c==">":
-				if quotes % 2 == 0:
-					return False
-				else:
-					return True				
-			if c=="<":
-				return True
-			c = f.read(1)
-		return False
+		return byte  ^ [1,2,4,8,16,32,64][self.myRand(0, 6)]
