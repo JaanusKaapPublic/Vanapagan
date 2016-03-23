@@ -15,7 +15,9 @@ class WinBasic:
 		
 		
 	def run(self, executable, children = True):
-		self.mainProcs.append(self.debugger.execv(executable, bFollow = children ))
+		tmp = self.debugger.execv(executable, bFollow = children )
+		self.mainProcs.append(tmp)
+		return tmp.get_pid()
 		
 		
 	def attachPid(self, pid):	
