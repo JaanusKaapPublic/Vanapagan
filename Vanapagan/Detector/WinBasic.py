@@ -103,11 +103,11 @@ class WinBasic:
 			if lib != None:
 				report.location = lib.get_label_at_address(crash.pc)
 			else:
-				report.location = HexDump.address(crash.pc, 32)[4:]
+				report.location = HexDump.address(crash.pc, event.get_thread().get_process().get_bits())[-4:]
 				
 			if crash.faultAddress == None:
 				crash.faultAddress = 0
-			report.faultAddr = HexDump.address(crash.faultAddress, 32)
+			report.faultAddr = HexDump.address(crash.faultAddress, event.get_thread().get_process().get_bits())
 			
 			report.stack = ""
 			stList = self.getStackTraceRelList(event.get_thread())
@@ -115,9 +115,9 @@ class WinBasic:
 				for ra in stList:
 					lib = event.get_thread().get_process().get_module_at_address(ra)
 					if lib != None:
-						report.stack += lib.get_label_at_address(ra) + " " + HexDump.address(ra, 32) + "\n"
+						report.stack += lib.get_label_at_address(ra) + " " + HexDump.address(ra, event.get_thread().get_process().get_bits()) + "\n"
 					else:
-						report.stack += HexDump.address(ra, 32) + "\n"
+						report.stack += HexDump.address(ra, event.get_thread().get_process().get_bits()) + "\n"
 			if report.stack == "":
 				report.stack = "NO_STACK"			
 			report.info= crash.fullReport()
