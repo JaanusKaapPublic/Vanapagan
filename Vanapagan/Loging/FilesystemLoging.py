@@ -11,10 +11,12 @@ class FilesystemLoging:
 			os.makedirs(tmpDir)	
 		
 		if crashReport != None:
-			if crashReport.nearNull:
+			if crashReport.nearNull == True:
 				tmpDir += "/nearNull"
-			else:
+			elif crashReport.nearNull == False:
 				tmpDir += "/notNearNull"
+			else:
+				tmpDir += "/Both"
 			if not os.path.isdir(tmpDir):
 				os.makedirs(tmpDir)	
 				
