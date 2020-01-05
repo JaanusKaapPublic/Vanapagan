@@ -14,6 +14,7 @@ class FileByteValues(MutatorBase.MutatorBase):
 		ret_signature = []
 		ret_text = ""
 		try:
+			ret_text += "Mutating file %s into file %s using FileByteValues mutator\n\n" % (src, dest)
 			if src!=dest:
 				shutil.copy2(src, dest)
 			size = os.path.getsize( dest )		
@@ -39,3 +40,8 @@ class FileByteValues(MutatorBase.MutatorBase):
 			raise #Just for now
 			return None
 		return "|".join(ret_signature) + "\n" + ret_text
+
+	def setConf(self, conf):
+		if "rate" in conf:
+			self.rate = conf["rate"]
+

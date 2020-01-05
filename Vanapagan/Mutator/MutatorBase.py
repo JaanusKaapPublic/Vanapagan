@@ -1,4 +1,5 @@
 import os
+import shutil
 
 
 class MutatorBase:		
@@ -40,4 +41,7 @@ class MutatorBase:
 			val = int(sign[8:10], 16)
 			f.seek(pos)
 			f.write(chr(val))
-		f.close()	
+		f.close()
+
+	def setConf(self, conf):
+		return True

@@ -1,11 +1,12 @@
+Newer version of Rehepapp (for Windows only but will add more stuff during the year 2020)
+
 Modules needed:
------For Windows
-WinAppDbg (http://winappdbg.sourceforge.net/)
-pywin32 (http://sourceforge.net/projects/pywin32/)
---------------------
------For Linux
-No additional modules needed
---------------------
------For OSX
-No additional modules needed (but no detectors yet....)
---------------------
+WinAppDbg (https://github.com/MarioVilas/winappdbg/)
+pywin32 (https://pypi.org/project/pywin32/)
+psutil (https://pypi.org/project/psutil/)
+
+Running:
+python fuzz.py {conf file}
+
+Conf file example should be quite readable but I will soon follow with blog post where I give more info about the tool and fuzzing overall.
+

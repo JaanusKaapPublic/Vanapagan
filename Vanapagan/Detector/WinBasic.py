@@ -128,19 +128,16 @@ class WinBasic:
 	def getStackTraceRelList(self, thread):
 		ret = []
 		
-		try:
-			sp = thread.get_sp()		
-			ebp = thread.get_context(win32.CONTEXT_CONTROL)['Ebp']
-			for x in xrange(0,10):
-				addr = thread.get_process().peek_pointer(ebp + 4)
-				if addr == None:
-					break
-				ebp = thread.get_process().peek_pointer(ebp)
-				lib = thread.get_process().get_module_at_address(addr)
-				if thread.get_process().is_address_executable(addr) and lib != None:
+		sp = thread.get_sp()		
+		ebp = thread.get_context(win32.CONTEXT_CONTROL)['Ebp']
+		for x in xrange(0,10):
+			addr = thread.get_process().peek_pointer(ebp + 4)
+			if addr == None:
+				break
+			ebp = thread.get_process().peek_pointer(ebp)
+			lib = thread.get_process().get_module_at_address(addr)
+			if thread.get_process().is_address_executable(addr) and lib != None:
 					ret.append(addr)
-				else:
-					break
-		except:
-			pass
+			else:
+				break
 		return ret

@@ -44,4 +44,8 @@ class FileBitFlipping(MutatorBase.MutatorBase):
 		return "|".join(ret_signature) + "\n" + ret_text
 		
 	def modify(self, byte):
-		return byte  ^ [1,2,4,8,16,32,64,128][self.myRand(0, 7)] 
+		return byte  ^ [1,2,4,8,16,32,64,128][self.myRand(0, 7)]
+
+	def setConf(self, conf):
+		if "rate" in conf:
+			self.rate = conf["rate"]

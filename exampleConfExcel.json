@@ -1,0 +1,48 @@
+{
+  "name": "excel32",
+
+  "input": ".\\input",
+  "retry": 1,
+  "binaries": ["excel.exe"],
+  "executable": "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\excel.exe",
+  "regsToDelete": ["HKCU\\Software\\Microsoft\\Office\\16.0\\Excel\\Resiliency"],
+  "filesToDelete": [
+    "C:\\Users\\jaanus\\AppData\\Local\\Temp\\*",
+    "C:\\Users\\jaanus\\AppData\\Roaming\\Microsoft\\Office\\Recent\\*",
+    "C:\\Users\\jaanus\\AppData\\Roaming\\Microsoft\\Windows\\Recent\\*"
+  ],
+  "windowToInteract": "Microsoft Excel",
+  "windowToInteractKey": "y",
+  "logNullCrashes": true,
+  "maxWait": 90,
+  "restartWhenException": false,
+  "restartWhenLoop": false,
+
+  "mutators": [
+    {
+      "type": "FileBitFlipping",
+      "rate": 40000,
+      "weight": 2
+    },
+    {
+      "type": "FileByteValues",
+      "rate": 60000
+    }
+  ],
+
+  "logging": [
+    {
+      "type": "FtpsLoging",
+      "host": "10.20.30.40",
+      "username": "bot",
+      "password": "s3cr3t",
+      "dir": "/BOT/excel32"
+    },
+    {
+      "type": "FilesystemLoging",
+      "dir": ".\\crashes\\"
+    }
+  ]
+
+
+}
