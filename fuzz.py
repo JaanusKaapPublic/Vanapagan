@@ -101,7 +101,7 @@ def pidsStoped(processes, imgs):
 		return True
 
 def restart():
-	os.system("del ." + os.path.sep + "situation.txt")
+	runCommand("shutdown /r /t 0")
 	exit()
 
 def enumHandler(hwnd, conf):
@@ -231,6 +231,6 @@ while True:
 				restart()
 			raise
 	
-	os.system("del ." + os.path.sep + "situation.txt")
+	clearSituation()			
 	if configurations.restartWhenLoop:
 		restart()
